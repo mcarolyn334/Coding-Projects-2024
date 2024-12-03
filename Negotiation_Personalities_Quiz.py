@@ -310,8 +310,9 @@ elif 1 <= st.session_state.current_question <= len(questions):
         st.write(f"**Question {st.session_state.current_question} of {len(questions)}**")
         st.write(current_question["text"])
 
-        # Encapsulate radio button and next button within a form
-        with st.form(key=f"question_form_{current_question_index}"):
+        # Radio button and "Next" button logic
+        form_key = f"question_form_{current_question_index}"  # Unique form key per question
+        with st.form(key=form_key):
             st.session_state.selected_option = st.radio(
                 "Choose your response:",
                 options,
