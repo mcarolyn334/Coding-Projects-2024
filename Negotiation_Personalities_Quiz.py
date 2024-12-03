@@ -1,6 +1,5 @@
 import streamlit as st
 
-# Add custom CSS
 def add_custom_css():
     st.markdown("""
         <style>
@@ -38,7 +37,7 @@ def add_custom_css():
 add_custom_css()
 
 # Define the path to the avatar folder
-avatar_folder = "https://github.com/mcarolyn334/Coding-Projects-2024/raw/main/"
+avatar_folder = "/Users/carolynmei/Documents/"
 
 # Map personality names to their corresponding avatar files
 avatar_files = {
@@ -252,53 +251,80 @@ personality_analysis = {
         "secret_sauce": """Your secret sauce is **unwavering integrity combined with intelligence**. Like Hermione, you use your principles as both a guiding light and a negotiation tool, building trust and securing deals that stand the test of time because they’re built on a foundation of fairness and respect."""
     }
 }
-# Initialize session state variables
+# Initialize session state to track progress and responses
 if "current_question" not in st.session_state:
     st.session_state.current_question = 0
 if "scores" not in st.session_state:
-    st.session_state.scores = {personality: 0 for personality in avatar_files.keys()}
+    st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
+if "selected_option" not in st.session_state:
+    st.session_state.selected_option = None
 if "proceed" not in st.session_state:
     st.session_state.proceed = False
 
-# Function to reset the quiz
-def reset_quiz():
-    st.session_state.current_question = 0
-    st.session_state.scores = {personality: 0 for personality in avatar_files.keys()}
-    st.session_state.proceed = False
-    st.experimental_rerun()
+# Landing page logic
+if st.session_state.current_question == 0:
+    st.title("Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?")
+    st.write("""
+        Negotiation is like a HogWharton elective you can't avoid—whether you're dealing with a potion master or trying to get discounted Fight Night tickets. 
+        It’s all about how you wield your magic: the confident wand flourish, the perfectly timed pause, or the practiced smile that says, 'I’ve got this.' 
+        But what kind of wizarding negotiator are you?
 
-# Run the quiz
-def run_quiz():
-    if st.session_state.current_question == 0:
-        st.title("Negotiation Personality Quiz")
-        st.write("Ready to find out what kind of magical negotiator you are? Click 'Let’s Begin' to start the quiz!")
-        if st.button("Let's Begin"):
-            st.session_state.current_question = 1
-            st.experimental_rerun()
+        Are you like Harry Potter, expanding the pie for everyone to win? Or maybe you're Draco Malfoy, pushing for the best outcome while trying not to look like an ass at Follies. 
+        Perhaps you're Cedric Diggory, the harmonizer who keeps everyone happy, or Cho Chang, always three steps ahead. 
+        This quiz will help you discover your inner wizarding dealmaker so the next time you're splitting a bill at The Three Broomsticks or negotiating with goblins at Gringotts, 
+        you’ll know exactly which strengths to leverage.
 
-    elif st.session_state.current_question <= len(questions):
-        current_question_index = st.session_state.current_question - 1
-        current_question = questions[current_question_index]
+        Ready to find out what kind of magical negotiator you are? Click 'Let’s Begin' and let the magic unfold!
+    """)
 
-        st.progress(st.session_state.current_question / len(questions))
-        st.write(f"**{current_question['text']}**")
-        selected_option = st.radio("Choose your response:", [option[0] for option in current_question["options"]],
-                                    key=f"response_{current_question_index}")
+    if st.button("Let's Begin"):
+        st.session_state.current_question = 1
+        st.session_state.proceed = False
 
-        if st.button("Next"):
+# Quiz question logic
+elif st.session_state.current_question <= len(questions):
+    current_question_index = st.session_state.current_question - 1
+    current_question = questions[current_question_index]
+
+    # Display progress bar
+    progress = st.session_state.current_question / len(questions)
+    st.progress(progress)
+    st.write(f"Question {st.session_state.current_question} of {len(questions)}")
+    st.write(f"**{current_question['text']}**")
+
+    # Radio button for answer selection
+    selected_option = st.radio(
+        "Choose your response:", 
+        [option[0] for option in current_question["options"]], 
+        key=f"response_{current_question_index}"
+    )
+
+    # Update session state with the selected option
+    st.session_state.selected_option = selected_option
+
+    # Display Next button
+    if st.button("Next"):
+        # Ensure an option is selected before moving to the next question
+        if st.session_state.selected_option:
             for option in current_question["options"]:
-                if selected_option == option[0]:
+                if st.session_state.selected_option == option[0]:
                     st.session_state.scores[option[1]] += 1
+
+            # Move to the next question
             st.session_state.current_question += 1
-            st.experimental_rerun()
+            st.session_state.selected_option = None
+        else:
+            st.warning("Please select an option before proceeding!")
 
-    else:
-        primary = max(st.session_state.scores, key=st.session_state.scores.get)
-        st.subheader("Results")
-        st.image(avatar_files[primary], caption=f"{primary}", width=300)
-        st.markdown(f"**Primary Personality: {primary}**")
-        if st.button("Take the Quiz Again"):
-            reset_quiz()
+# Results logic
+elif st.session_state.current_question > len(questions):
+    st.subheader("Results")
+    primary = max(st.session_state.scores, key=st.session_state.scores.get)
 
-# Run the quiz
-run_quiz()
+    st.image(avatar_files[primary], caption=f"{primary}", width=300)
+    st.write(f"**Primary Personality: {primary}**")
+    st.markdown(f"<i>{personality_analysis[primary]['description']}</i>", unsafe_allow_html=True)
+    st.write(f"**Strengths**: {personality_analysis[primary]['strengths']}")
+    st.write(f"**Weaknesses**: {personality_analysis[primary]['weaknesses']}")
+    st.write(f"**Tips**: {personality_analysis[primary]['tips']}")
+    st.write(f"**Secret Sauce**: {personality_analysis[primary]['secret_sauce']}")
