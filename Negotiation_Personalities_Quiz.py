@@ -273,8 +273,6 @@ if "scores" not in st.session_state:
     st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
 if "selected_option" not in st.session_state:
     st.session_state.selected_option = None
-if "proceed" not in st.session_state:
-    st.session_state.proceed = False
 
 # Landing page logic
 if st.session_state.current_question == 0:
@@ -294,8 +292,6 @@ if st.session_state.current_question == 0:
 
     if st.button("Let's Begin"):
         st.session_state.current_question = 1
-        st.session_state.selected_option = None
-        st.session_state.proceed = False
 
 # Quiz question logic
 elif 1 <= st.session_state.current_question <= len(questions):
@@ -314,28 +310,25 @@ elif 1 <= st.session_state.current_question <= len(questions):
         st.write(f"**Question {st.session_state.current_question} of {len(questions)}**")
         st.write(current_question["text"])
 
-        # Radio button for answer selection
-        selected_option = st.radio(
-            "Choose your response:",
-            options,
-            key=f"response_{current_question_index}"  # Unique key for each question
-        )
+        # Encapsulate radio button and next button within a form
+        with st.form(key=f"question_form_{current_question_index}"):
+            st.session_state.selected_option = st.radio(
+                "Choose your response:",
+                options,
+                key=f"response_{current_question_index}"  # Unique key for each question
+            )
+            next_button = st.form_submit_button("Next")
 
-        # Update session state with the selected option
-        st.session_state.selected_option = selected_option
+            if next_button:
+                if st.session_state.selected_option:
+                    for option in current_question["options"]:
+                        if st.session_state.selected_option == option[0]:
+                            st.session_state.scores[option[1]] += 1
 
-        # Display Next button
-        if st.button("Next", key=f"next_{current_question_index}"):
-            if st.session_state.selected_option:
-                for option in current_question["options"]:
-                    if st.session_state.selected_option == option[0]:
-                        st.session_state.scores[option[1]] += 1
-
-                # Move to the next question
-                st.session_state.current_question += 1
-                st.session_state.selected_option = None  # Reset for the next question
-            else:
-                st.warning("Please select an option before proceeding!")
+                    # Move to the next question
+                    st.session_state.current_question += 1
+                else:
+                    st.warning("Please select an option before proceeding!")
 
 # Results logic
 elif st.session_state.current_question > len(questions):
@@ -351,7 +344,6 @@ elif st.session_state.current_question > len(questions):
         unsafe_allow_html=True,
     )
 
-    st.write(f"**Primary Personality: {primary}**")
     st.markdown(f"<i>{personality_analysis[primary]['description']}</i>", unsafe_allow_html=True)
     st.write(f"**Strengths**: {personality_analysis[primary]['strengths']}")
     st.write(f"**Weaknesses**: {personality_analysis[primary]['weaknesses']}")
