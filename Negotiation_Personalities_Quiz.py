@@ -346,7 +346,6 @@ elif st.session_state.current_question > len(questions):
         f"""
         <div style="text-align: center;">
             <img src="{avatar_files[primary]}" alt="{primary}" style="width:300px; margin:auto;">
-            <p><b>{primary}</b></p>
         </div>
         """,
         unsafe_allow_html=True,
