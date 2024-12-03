@@ -316,7 +316,22 @@ elif st.session_state.current_question <= len(questions):
         else:
             st.warning("Please select an option before proceeding!")
 
-# Results logic
+def reset_quiz_state():
+    """
+    Reset all session state variables to their initial state.
+    This allows the user to start the quiz from the beginning.
+    """
+    # Reset quiz progression
+    st.session_state.current_question = 0
+    
+    # Reset personality scores
+    st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
+    
+    # Reset other tracking variables if needed
+    st.session_state.selected_option = None
+    st.session_state.proceed = False
+
+# Include restart functionality in results logic
 elif st.session_state.current_question > len(questions):
     st.subheader("Results")
     primary = max(st.session_state.scores, key=st.session_state.scores.get)
@@ -328,3 +343,8 @@ elif st.session_state.current_question > len(questions):
     st.write(f"**Weaknesses**: {personality_analysis[primary]['weaknesses']}")
     st.write(f"**Tips**: {personality_analysis[primary]['tips']}")
     st.write(f"**Secret Sauce**: {personality_analysis[primary]['secret_sauce']}")
+    
+    # Add a restart button
+    if st.button("Take the Quiz Again"):
+        reset_quiz_state()
+        st.experimental_rerun()  # This triggers a rerun of the Streamlit app
