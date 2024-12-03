@@ -285,40 +285,40 @@ elif 1 <= st.session_state.current_question <= len(questions):
     current_question_index = st.session_state.current_question - 1
     current_question = questions[current_question_index]
 
-    # Validate options
-    options = [option[0] for option in current_question.get("options", [])]
-    if not options:
-        st.error("Error: Current question does not have valid options.")
-    else:
-        # Display progress bar
-        progress = st.session_state.current_question / len(questions)
-        st.progress(progress)
-        st.write(f"**Question {st.session_state.current_question} of {len(questions)}**")
-        st.write(current_question["text"])
+    # Ensure options are valid
+options = [option[0] for option in current_question.get("options", [])]
 
-        # Radio button for answer selection
-        selected_option = st.radio(
-            "Choose your response:",
-            options,
-            index=-1,  # No pre-selected option
-            key=f"response_{current_question_index}",  # Unique key for each question
-        )
+if not options:
+    st.error("Error: Current question does not have valid options.")
+else:
+    # Display progress bar
+    progress = st.session_state.current_question / len(questions)
+    st.progress(progress)
+    st.write(f"**Question {st.session_state.current_question} of {len(questions)}**")
+    st.write(current_question["text"])
 
-        # Update session state with the selected option
-        st.session_state.selected_option = selected_option
+    # Radio button for answer selection
+    selected_option = st.radio(
+        "Choose your response:",
+        options,
+        key=f"response_{current_question_index}"  # Unique key for each question
+    )
 
-        # Display Next button
-        if st.button("Next", key=f"next_{current_question_index}"):
-            if st.session_state.selected_option:
-                for option in current_question["options"]:
-                    if st.session_state.selected_option == option[0]:
-                        st.session_state.scores[option[1]] += 1
+    # Update session state with the selected option
+    st.session_state.selected_option = selected_option
 
-                # Move to the next question
-                st.session_state.current_question += 1
-                st.session_state.selected_option = None  # Reset for the next question
-            else:
-                st.warning("Please select an option before proceeding!")
+    # Display Next button
+    if st.button("Next", key=f"next_{current_question_index}"):
+        if st.session_state.selected_option:
+            for option in current_question["options"]:
+                if st.session_state.selected_option == option[0]:
+                    st.session_state.scores[option[1]] += 1
+
+            # Move to the next question
+            st.session_state.current_question += 1
+            st.session_state.selected_option = None  # Reset for the next question
+        else:
+            st.warning("Please select an option before proceeding!")
 
 # Results logic
 elif st.session_state.current_question > len(questions):
