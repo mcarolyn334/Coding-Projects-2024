@@ -37,7 +37,7 @@ def add_custom_css():
 add_custom_css()
 
 # Define the path to the avatar folder
-avatar_folder = "https://github.com/mcarolyn334/Coding-Projects-2024/raw/main"
+avatar_folder = "https://github.com/mcarolyn334/Coding-Projects-2024/raw/main/"
 
 # Map personality names to their corresponding avatar files
 avatar_files = {
