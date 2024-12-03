@@ -3,6 +3,11 @@ import streamlit as st
 def add_custom_css():
     st.markdown("""
         <style>
+        /* Import the custom HarryP font */
+        @font-face {
+            font-family: 'HarryP';
+            src: url('https://raw.githubusercontent.com/mcarolyn334/Coding-Projects-2024/main/HARRYP__.TTF') format('truetype');
+        }
         /* General Background */
         body {
             background-color: #F5F5F5; /* Light grey background */
@@ -12,12 +17,12 @@ def add_custom_css():
         }
         /* Header Text */
         h1, h2, h3, h4, h5 {
-            font-family: 'Georgia', serif; /* Magical Academic Feel */
+            font-family: 'HarryP', serif; /* Magical Academic Feel */
             color: #002D72 !important; /* Wharton Navy Blue for headers */
         }
         /* Body Text */
         p, div, label, span, li {
-            font-family: 'Verdana', sans-serif; /* Clean and Readable */
+            font-family: 'Georgia', sans-serif; /* Clean and Readable */
             color: #002D72 !important; /* Navy Blue for body content */
         }
         /* Static Button Styling */
