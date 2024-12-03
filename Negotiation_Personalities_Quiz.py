@@ -299,6 +299,9 @@ elif st.session_state.current_question <= len(questions):
         key=f"response_{current_question_index}"
     )
 
+    # Update session state with the selected option
+    st.session_state.selected_option = selected_option
+
     # Display Next button
     if st.button("Next"):
         # Ensure an option is selected before moving to the next question
