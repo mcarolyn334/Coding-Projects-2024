@@ -268,7 +268,7 @@ if "proceed" not in st.session_state:
 
 # Landing page logic
 if st.session_state.current_question == 0:
-    st.title("Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?")
+    st.markdown('<div class="quiz-title">Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?</div>', unsafe_allow_html=True)
     st.write("""
         Negotiation is like a HogWharton elective you can't avoid—whether you're dealing with a potion master or trying to get discounted Fight Night tickets. 
         It’s all about how you wield your magic: the confident wand flourish, the perfectly timed pause, or the practiced smile that says, 'I’ve got this.' 
