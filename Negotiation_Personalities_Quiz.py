@@ -254,6 +254,8 @@ personality_analysis = {
 # Initialize session state variables
 if "current_question" not in st.session_state:
     st.session_state.current_question = 0
+if "scores" not in st.session_state:
+    st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
 if "selected_option" not in st.session_state:
     st.session_state.selected_option = None
 if "proceed" not in st.session_state:
@@ -286,39 +288,39 @@ elif 1 <= st.session_state.current_question <= len(questions):
     current_question = questions[current_question_index]
 
     # Ensure options are valid
-options = [option[0] for option in current_question.get("options", [])]
+    options = [option[0] for option in current_question.get("options", [])]
 
-if not options:
-    st.error("Error: Current question does not have valid options.")
-else:
-    # Display progress bar
-    progress = st.session_state.current_question / len(questions)
-    st.progress(progress)
-    st.write(f"**Question {st.session_state.current_question} of {len(questions)}**")
-    st.write(current_question["text"])
+    if not options:
+        st.error("Error: Current question does not have valid options.")
+    else:
+        # Display progress bar
+        progress = st.session_state.current_question / len(questions)
+        st.progress(progress)
+        st.write(f"**Question {st.session_state.current_question} of {len(questions)}**")
+        st.write(current_question["text"])
 
-    # Radio button for answer selection
-    selected_option = st.radio(
-        "Choose your response:",
-        options,
-        key=f"response_{current_question_index}"  # Unique key for each question
-    )
+        # Radio button for answer selection
+        selected_option = st.radio(
+            "Choose your response:",
+            options,
+            key=f"response_{current_question_index}"  # Unique key for each question
+        )
 
-    # Update session state with the selected option
-    st.session_state.selected_option = selected_option
+        # Update session state with the selected option
+        st.session_state.selected_option = selected_option
 
-    # Display Next button
-    if st.button("Next", key=f"next_{current_question_index}"):
-        if st.session_state.selected_option:
-            for option in current_question["options"]:
-                if st.session_state.selected_option == option[0]:
-                    st.session_state.scores[option[1]] += 1
+        # Display Next button
+        if st.button("Next", key=f"next_{current_question_index}"):
+            if st.session_state.selected_option:
+                for option in current_question["options"]:
+                    if st.session_state.selected_option == option[0]:
+                        st.session_state.scores[option[1]] += 1
 
-            # Move to the next question
-            st.session_state.current_question += 1
-            st.session_state.selected_option = None  # Reset for the next question
-        else:
-            st.warning("Please select an option before proceeding!")
+                # Move to the next question
+                st.session_state.current_question += 1
+                st.session_state.selected_option = None  # Reset for the next question
+            else:
+                st.warning("Please select an option before proceeding!")
 
 # Results logic
 elif st.session_state.current_question > len(questions):
