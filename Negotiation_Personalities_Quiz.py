@@ -251,48 +251,58 @@ personality_analysis = {
         "secret_sauce": """Your secret sauce is **unwavering integrity combined with intelligence**. Like Hermione, you use your principles as both a guiding light and a negotiation tool, building trust and securing deals that stand the test of time because they’re built on a foundation of fairness and respect."""
     }
 }
-# Initial setup of session state variables
+# Initialize session state variables
 if "current_question" not in st.session_state:
     st.session_state.current_question = 0
 if "scores" not in st.session_state:
-    st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
+    st.session_state.scores = {personality: 0 for personality in avatar_files.keys()}
+if "proceed" not in st.session_state:
+    st.session_state.proceed = False
 
-# Landing page logic
-if st.session_state.current_question == 0:
-    st.title("Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?")
-    st.write("""
-        Negotiation is like a HogWharton elective you can't avoid—whether you're dealing with a potion master or trying to get discounted Fight Night tickets. 
-        It’s all about how you wield your magic: the confident wand flourish, the perfectly timed pause, or the practiced smile that says, 'I’ve got this.' 
-        But what kind of wizarding negotiator are you?
+# Function to reset the quiz
+def reset_quiz():
+    st.session_state.current_question = 0
+    st.session_state.scores = {personality: 0 for personality in avatar_files.keys()}
+    st.session_state.proceed = False
+    st.experimental_rerun()
 
-        Are you like Harry Potter, expanding the pie for everyone to win? Or maybe you're Draco Malfoy, pushing for the best outcome while trying not to look like an ass at Follies. 
-        Perhaps you're Cedric Diggory, the harmonizer who keeps everyone happy, or Cho Chang, always three steps ahead. 
-        This quiz will help you discover your inner wizarding dealmaker so the next time you're splitting a bill at The Three Broomsticks or negotiating with goblins at Gringotts, 
-        you’ll know exactly which strengths to leverage.
+# Run the quiz
+def run_quiz():
+    # Landing page
+    if st.session_state.current_question == 0:
+        st.title("Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?")
+        st.write("""
+            Negotiation is like a HogWharton elective you can't avoid—whether you're dealing with a potion master or trying to get discounted Fight Night tickets. 
+            It’s all about how you wield your magic: the confident wand flourish, the perfectly timed pause, or the practiced smile that says, 'I’ve got this.' 
+            But what kind of wizarding negotiator are you?
 
-        Ready to find out what kind of magical negotiator you are? Click 'Let’s Begin' and let the magic unfold!
-    """)
+            Are you like Harry Potter, expanding the pie for everyone to win? Or maybe you're Draco Malfoy, pushing for the best outcome while trying not to look like an ass at Follies. 
+            Perhaps you're Cedric Diggory, the harmonizer who keeps everyone happy, or Cho Chang, always three steps ahead. 
+            This quiz will help you discover your inner wizarding dealmaker so the next time you're splitting a bill at The Three Broomsticks or negotiating with goblins at Gringotts, 
+            you’ll know exactly which strengths to leverage.
 
-    if st.button("Let's Begin"):
-        st.session_state.current_question = 1
-        st.session_state.proceed = False
+            Ready to find out what kind of magical negotiator you are? Click 'Let’s Begin' and let the magic unfold!
+        """)
 
-# Quiz Questions
-    elif st.session_state.current_question <= len(questions):
+        if st.button("Let's Begin"):
+            st.session_state.current_question = 1
+            st.experimental_rerun()
+
+    # Quiz questions
+    elif 1 <= st.session_state.current_question <= len(questions):
         current_question_index = st.session_state.current_question - 1
         current_question = questions[current_question_index]
 
         # Display progress
-        progress = st.session_state.current_question / len(questions)
-        st.progress(progress)
+        st.progress(st.session_state.current_question / len(questions))
         st.write(f"Question {st.session_state.current_question} of {len(questions)}")
         st.write(f"**{current_question['text']}**")
 
         # Option selection
         selected_option = st.radio(
-            "Choose your response:", 
-            [option[0] for option in current_question["options"]], 
-            key=f"response_{current_question_index}"
+            "Choose your response:",
+            [option[0] for option in current_question["options"]],
+            key=f"response_{current_question_index}",
         )
 
         # Next button logic
@@ -307,7 +317,7 @@ if st.session_state.current_question == 0:
             else:
                 st.warning("Please select an option before proceeding!")
 
-    # Results Page
+    # Results page
     else:
         st.subheader("Results")
         primary = max(st.session_state.scores, key=st.session_state.scores.get)
@@ -319,12 +329,10 @@ if st.session_state.current_question == 0:
         st.write(f"**Weaknesses**: {personality_analysis[primary]['weaknesses']}")
         st.write(f"**Tips**: {personality_analysis[primary]['tips']}")
         st.write(f"**Secret Sauce**: {personality_analysis[primary]['secret_sauce']}")
-        
-        # Restart Quiz Button
+
+        # Restart button
         if st.button("Take the Quiz Again"):
-            st.session_state.current_question = 0
-            st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
-            st.experimental_rerun()
+            reset_quiz()
 
 # Call the quiz function
 run_quiz()
