@@ -251,11 +251,9 @@ personality_analysis = {
         "secret_sauce": """Your secret sauce is **unwavering integrity combined with intelligence**. Like Hermione, you use your principles as both a guiding light and a negotiation tool, building trust and securing deals that stand the test of time because they’re built on a foundation of fairness and respect."""
     }
 }
-# Initialize session state to track progress and responses
+# Initialize session state variables
 if "current_question" not in st.session_state:
     st.session_state.current_question = 0
-if "scores" not in st.session_state:
-    st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
 if "selected_option" not in st.session_state:
     st.session_state.selected_option = None
 if "proceed" not in st.session_state:
@@ -279,7 +277,8 @@ if st.session_state.current_question == 0:
 
     if st.button("Let's Begin"):
         st.session_state.current_question = 1
-        st.session_state.selected_option = None  # Ensure no option is pre-selected
+        st.session_state.selected_option = None
+        st.session_state.proceed = False
 
 # Quiz question logic
 elif 1 <= st.session_state.current_question <= len(questions):
@@ -287,16 +286,22 @@ elif 1 <= st.session_state.current_question <= len(questions):
     current_question = questions[current_question_index]
 
     # Display progress bar
-    st.progress(st.session_state.current_question / len(questions))
+    progress = st.session_state.current_question / len(questions)
+    st.progress(progress)
     st.write(f"**Question {st.session_state.current_question} of {len(questions)}**")
     st.write(current_question["text"])
 
     # Radio button for answer selection
-    st.session_state.selected_option = st.radio(
+    selected_option = st.radio(
         "Choose your response:",
         [option[0] for option in current_question["options"]],
+        index=-1,  # No pre-selected option
         key=f"response_{current_question_index}",
     )
+
+    # Store the selected option in session state
+    if selected_option:
+        st.session_state.selected_option = selected_option
 
     # Display Next button
     if st.button("Next"):
@@ -306,7 +311,7 @@ elif 1 <= st.session_state.current_question <= len(questions):
                 if st.session_state.selected_option == option[0]:
                     st.session_state.scores[option[1]] += 1
 
-            # Advance to the next question
+            # Move to the next question
             st.session_state.current_question += 1
             st.session_state.selected_option = None  # Reset for the next question
         else:
