@@ -251,15 +251,11 @@ personality_analysis = {
         "secret_sauce": """Your secret sauce is **unwavering integrity combined with intelligence**. Like Hermione, you use your principles as both a guiding light and a negotiation tool, building trust and securing deals that stand the test of time because they’re built on a foundation of fairness and respect."""
     }
 }
-# Initialize session state to track progress and responses
+# Initial setup of session state variables
 if "current_question" not in st.session_state:
     st.session_state.current_question = 0
 if "scores" not in st.session_state:
     st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
-if "selected_option" not in st.session_state:
-    st.session_state.selected_option = None
-if "proceed" not in st.session_state:
-    st.session_state.proceed = False
 
 # Landing page logic
 if st.session_state.current_question == 0:
@@ -281,70 +277,54 @@ if st.session_state.current_question == 0:
         st.session_state.current_question = 1
         st.session_state.proceed = False
 
-# Quiz question logic
-elif st.session_state.current_question <= len(questions):
-    current_question_index = st.session_state.current_question - 1
-    current_question = questions[current_question_index]
+# Quiz Questions
+    elif st.session_state.current_question <= len(questions):
+        current_question_index = st.session_state.current_question - 1
+        current_question = questions[current_question_index]
 
-    # Display progress bar
-    progress = st.session_state.current_question / len(questions)
-    st.progress(progress)
-    st.write(f"Question {st.session_state.current_question} of {len(questions)}")
-    st.write(f"**{current_question['text']}**")
+        # Display progress
+        progress = st.session_state.current_question / len(questions)
+        st.progress(progress)
+        st.write(f"Question {st.session_state.current_question} of {len(questions)}")
+        st.write(f"**{current_question['text']}**")
 
-    # Radio button for answer selection
-    selected_option = st.radio(
-        "Choose your response:", 
-        [option[0] for option in current_question["options"]],
-        key=f"response_{current_question_index}"
-    )
+        # Option selection
+        selected_option = st.radio(
+            "Choose your response:", 
+            [option[0] for option in current_question["options"]], 
+            key=f"response_{current_question_index}"
+        )
 
-    # Update session state with the selected option
-    st.session_state.selected_option = selected_option
+        # Next button logic
+        if st.button("Next"):
+            if selected_option:
+                for option in current_question["options"]:
+                    if selected_option == option[0]:
+                        st.session_state.scores[option[1]] += 1
 
-    # Display Next button
-    if st.button("Next"):
-        # Ensure an option is selected before moving to the next question
-        if st.session_state.selected_option:
-            for option in current_question["options"]:
-                if st.session_state.selected_option == option[0]:
-                    st.session_state.scores[option[1]] += 1
+                st.session_state.current_question += 1
+                st.experimental_rerun()
+            else:
+                st.warning("Please select an option before proceeding!")
 
-            # Move to the next question
-            st.session_state.current_question += 1
-            st.session_state.selected_option = None
-        else:
-            st.warning("Please select an option before proceeding!")
+    # Results Page
+    else:
+        st.subheader("Results")
+        primary = max(st.session_state.scores, key=st.session_state.scores.get)
 
-def reset_quiz_state():
-    """
-    Reset all session state variables to their initial state.
-    This allows the user to start the quiz from the beginning.
-    """
-    # Reset quiz progression
-    st.session_state.current_question = 0
-    
-    # Reset personality scores
-    st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
-    
-    # Reset other tracking variables if needed
-    st.session_state.selected_option = None
-    st.session_state.proceed = False
+        st.image(avatar_files[primary], caption=f"{primary}", width=300)
+        st.write(f"**Primary Personality: {primary}**")
+        st.markdown(f"<i>{personality_analysis[primary]['description']}</i>", unsafe_allow_html=True)
+        st.write(f"**Strengths**: {personality_analysis[primary]['strengths']}")
+        st.write(f"**Weaknesses**: {personality_analysis[primary]['weaknesses']}")
+        st.write(f"**Tips**: {personality_analysis[primary]['tips']}")
+        st.write(f"**Secret Sauce**: {personality_analysis[primary]['secret_sauce']}")
+        
+        # Restart Quiz Button
+        if st.button("Take the Quiz Again"):
+            st.session_state.current_question = 0
+            st.session_state.scores = {personality: 0 for personality in personality_analysis.keys()}
+            st.experimental_rerun()
 
-# Include restart functionality in results logic
-elif st.session_state.current_question > len(questions):
-    st.subheader("Results")
-    primary = max(st.session_state.scores, key=st.session_state.scores.get)
-
-    st.image(avatar_files[primary], caption=f"{primary}", width=300)
-    st.write(f"**Primary Personality: {primary}**")
-    st.markdown(f"<i>{personality_analysis[primary]['description']}</i>", unsafe_allow_html=True)
-    st.write(f"**Strengths**: {personality_analysis[primary]['strengths']}")
-    st.write(f"**Weaknesses**: {personality_analysis[primary]['weaknesses']}")
-    st.write(f"**Tips**: {personality_analysis[primary]['tips']}")
-    st.write(f"**Secret Sauce**: {personality_analysis[primary]['secret_sauce']}")
-    
-    # Add a restart button
-    if st.button("Take the Quiz Again"):
-        reset_quiz_state()
-        st.experimental_rerun()  # This triggers a rerun of the Streamlit app
+# Call the quiz function
+run_quiz()
