@@ -15,10 +15,20 @@ def add_custom_css():
         .stApp {
             background-color: #F5F5F5; /* Main container in light grey */
         }
-        /* Header Text */
-        h1, h2, h3, h4, h5 {
-            font-family: 'HarryP', serif; /* Magical Academic Feel */
-            color: #002D72 !important; /* Wharton Navy Blue for headers */
+        /* Header Styling for HarryP */
+        .harryp-header {
+            font-family: 'HarryP', serif;
+            font-size: 36px; /* Adjust size as needed */
+            color: #002D72; /* Wharton Navy Blue */
+            text-align: center; /* Center align text */
+            margin-top: 20px; /* Add some spacing */
+        }
+        .harryp-subheader {
+            font-family: 'HarryP', serif;
+            font-size: 24px; /* Adjust size as needed */
+            color: #002D72; /* Wharton Navy Blue */
+            text-align: center; /* Center align text */
+            margin-top: 10px; /* Add some spacing */
         }
         /* Body Text */
         p, div, label, span, li {
@@ -268,7 +278,7 @@ if "proceed" not in st.session_state:
 
 # Landing page logic
 if st.session_state.current_question == 0:
-    st.markdown('<div class="quiz-title">Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="harryp-header">Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?</div>', unsafe_allow_html=True)
     st.write("""
         Negotiation is like a HogWharton elective you can't avoid—whether you're dealing with a potion master or trying to get discounted Fight Night tickets. 
         It’s all about how you wield your magic: the confident wand flourish, the perfectly timed pause, or the practiced smile that says, 'I’ve got this.' 
@@ -329,7 +339,7 @@ elif 1 <= st.session_state.current_question <= len(questions):
 
 # Results logic
 elif st.session_state.current_question > len(questions):
-    st.subheader("Your HogWharton Negotiation Personality")
+    st.markdown('<div class="harryp-subheader">Your HogWharton Negotiation Personality</div>', unsafe_allow_html=True)
     primary = max(st.session_state.scores, key=st.session_state.scores.get)
 
     st.markdown(
