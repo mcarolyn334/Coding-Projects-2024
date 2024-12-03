@@ -324,10 +324,18 @@ elif 1 <= st.session_state.current_question <= len(questions):
 
 # Results logic
 elif st.session_state.current_question > len(questions):
-    st.subheader("Results")
+    st.subheader("Your HogWharton Negotiation Personality")
     primary = max(st.session_state.scores, key=st.session_state.scores.get)
 
-    st.image(avatar_files[primary], caption=f"{primary}", width=300)
+    st.markdown(
+        f"""
+        <div style="text-align: center;">
+            <img src="{avatar_files[primary]}" alt="{primary}" style="width:300px; margin:auto;">
+            <p><b>{primary}</b></p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     st.write(f"**Primary Personality: {primary}**")
     st.markdown(f"<i>{personality_analysis[primary]['description']}</i>", unsafe_allow_html=True)
     st.write(f"**Strengths**: {personality_analysis[primary]['strengths']}")
