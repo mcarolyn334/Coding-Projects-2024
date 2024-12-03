@@ -344,14 +344,13 @@ elif st.session_state.current_question > len(questions):
 
     st.markdown(
         f"""
-        <div style="text-align: center;">
+        <div style="text-align: center;margin-bottom: 40px;">
             <img src="{avatar_files[primary]}" alt="{primary}" style="width:300px; margin:auto;">
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    
     st.write(f"**Primary Personality: {primary}**")
     st.markdown(f"<i>{personality_analysis[primary]['description']}</i>", unsafe_allow_html=True)
     st.write(f"**Strengths**: {personality_analysis[primary]['strengths']}")
