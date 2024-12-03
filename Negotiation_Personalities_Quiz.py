@@ -295,20 +295,21 @@ elif st.session_state.current_question <= len(questions):
     # Radio button for answer selection
     selected_option = st.radio(
         "Choose your response:", 
-        [option[0] for option in current_question["options"]], 
+        [option[0] for option in current_question["options"]],
         key=f"response_{current_question_index}"
     )
 
     # Display Next button
     if st.button("Next"):
         # Ensure an option is selected before moving to the next question
-        if selected_option:
+        if st.session_state.selected_option:
             for option in current_question["options"]:
-                if selected_option == option[0]:
+                if st.session_state.selected_option == option[0]:
                     st.session_state.scores[option[1]] += 1
 
             # Move to the next question
             st.session_state.current_question += 1
+            st.session_state.selected_option = None
         else:
             st.warning("Please select an option before proceeding!")
 
