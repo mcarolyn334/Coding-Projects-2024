@@ -1,5 +1,3 @@
- # -*- coding: utf-8 -*-
-
 import streamlit as st
 
 def add_custom_css():
@@ -39,7 +37,7 @@ def add_custom_css():
 add_custom_css()
 
 # Define the path to the avatar folder
-avatar_folder = "/Users/carolynmei/Documents/"
+avatar_folder = "https://github.com/mcarolyn334/Coding-Projects-2024/raw/main/"
 
 # Map personality names to their corresponding avatar files
 avatar_files = {
@@ -301,20 +299,16 @@ elif st.session_state.current_question <= len(questions):
         key=f"response_{current_question_index}"
     )
 
-    # Update session state with the selected option
-    st.session_state.selected_option = selected_option
-
     # Display Next button
     if st.button("Next"):
         # Ensure an option is selected before moving to the next question
-        if st.session_state.selected_option:
+        if selected_option:
             for option in current_question["options"]:
-                if st.session_state.selected_option == option[0]:
+                if selected_option == option[0]:
                     st.session_state.scores[option[1]] += 1
 
             # Move to the next question
             st.session_state.current_question += 1
-            st.session_state.selected_option = None
         else:
             st.warning("Please select an option before proceeding!")
 
