@@ -350,6 +350,8 @@ elif st.session_state.current_question > len(questions):
         """,
         unsafe_allow_html=True,
     )
+
+    
     st.write(f"**Primary Personality: {primary}**")
     st.markdown(f"<i>{personality_analysis[primary]['description']}</i>", unsafe_allow_html=True)
     st.write(f"**Strengths**: {personality_analysis[primary]['strengths']}")
