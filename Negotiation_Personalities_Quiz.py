@@ -18,7 +18,7 @@ def add_custom_css():
         /* Header Styling for HarryP */
         .harryp-header {
             font-family: 'HarryP', serif;
-            font-size: 40px; /* Adjust size as needed */
+            font-size: 44px; /* Adjust size as needed */
             color: #002D72; /* Wharton Navy Blue */
             text-align: center; /* Center align text */
             margin-top: 20px; /* Add some spacing */
