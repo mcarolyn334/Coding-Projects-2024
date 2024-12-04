@@ -278,9 +278,7 @@ if "selected_option" not in st.session_state:
 if st.session_state.current_question == 0:
     st.markdown('<div class="harryp-header">Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?</div>', unsafe_allow_html=True)
     st.write("""
-        Negotiation is like a HogWharton elective you can't avoid—whether you're dealing with a potion master or trying to get discounted Fight Night tickets. 
-        It’s all about how you wield your magic: the confident wand flourish, the perfectly timed pause, or the practiced smile that says, 'I’ve got this.' 
-        But what kind of wizarding negotiator are you?
+        Negotiation at HogWharton is like the group project you didn’t sign up for but can’t escape—whether you're haggling with a potion master over cauldron cleaning fees or sweet-talking your way into discounted Fight Night tickets. It’s all about how you wield your magic: the confident wand flourish, the well-timed strategic pause, or the smile that screams, “I got this, and yes, I read the syllabus.” But when it comes to wizarding negotiations, where do you truly shine?
 
         Are you like Harry Potter, expanding the pie for everyone to win? Or maybe you're Draco Malfoy, pushing for the best outcome while trying not to look like an ass at Follies. 
         Perhaps you're Cedric Diggory, the harmonizer who keeps everyone happy, or Cho Chang, always three steps ahead. 
