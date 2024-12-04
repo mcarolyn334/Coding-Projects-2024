@@ -276,7 +276,7 @@ if "selected_option" not in st.session_state:
 
 # Landing page logic
 if st.session_state.current_question == 0:
-    st.markdown('<div class="harryp-header">Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?⚡</div>', unsafe_allow_html=True)
+    st.markdown('<div class="harryp-header">🦉Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?⚡</div>', unsafe_allow_html=True)
     st.write("""
         Negotiation at HogWharton is like the group project you didn’t sign up for but can’t escape—whether you're haggling with a potion master over cauldron cleaning fees or sweet-talking your way into discounted Fight Night tickets. It’s all about how you wield your magic: the confident wand flourish, the well-timed strategic pause, or the smile that screams, “I got this, and yes, I read the syllabus.” But when it comes to wizarding negotiations, where do you truly shine?
 
