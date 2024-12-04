@@ -276,7 +276,7 @@ if "selected_option" not in st.session_state:
 
 # Landing page logic
 if st.session_state.current_question == 0:
-    st.markdown('<div class="harryp-header">Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="harryp-header">Negotiation Personality Quiz: What Kind of HogWharton Dealmaker Are You?⚡</div>', unsafe_allow_html=True)
     st.write("""
         Negotiation at HogWharton is like the group project you didn’t sign up for but can’t escape—whether you're haggling with a potion master over cauldron cleaning fees or sweet-talking your way into discounted Fight Night tickets. It’s all about how you wield your magic: the confident wand flourish, the well-timed strategic pause, or the smile that screams, “I got this, and yes, I read the syllabus.” But when it comes to wizarding negotiations, where do you truly shine?
 
@@ -285,7 +285,7 @@ if st.session_state.current_question == 0:
         This quiz will help you discover your inner wizarding dealmaker so the next time you're splitting a bill at The Three Broomsticks or negotiating with goblins at Gringotts, 
         you’ll know exactly which strengths to leverage.
 
-        Ready to find out what kind of magical negotiator you are? Click 'Let’s Begin' and let the magic unfold!
+        Ready to find out what kind of magical negotiator you are? Click 'Let’s Begin' and let the magic unfold!🪄✨
     """)
 
     if st.button("Let's Begin"):
@@ -331,7 +331,7 @@ elif 1 <= st.session_state.current_question <= len(questions):
 
 # Results logic
 elif st.session_state.current_question > len(questions):
-    st.markdown('<div class="harryp-subheader">Your HogWharton Negotiation Personality</div>', unsafe_allow_html=True)
+    st.markdown('<div class="harryp-subheader">Your HogWharton Negotiation Personality 🧙‍♂️</div>', unsafe_allow_html=True)
     primary = max(st.session_state.scores, key=st.session_state.scores.get)
 
     st.markdown(
